@@ -13,13 +13,17 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class PintuKeluarResource extends Resource
 {
     protected static ?string $model = PintuKeluar::class;
+
     protected static ?string $modelLabel = 'Pintu keluar';
+
     protected static ?string $pluralModelLabel = 'Pintu keluar';
-    protected static ?string $navigationLabel = 'Bayar'; 
+
+    protected static ?string $navigationLabel = 'Bayar';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
@@ -31,6 +35,11 @@ class PintuKeluarResource extends Resource
     public static function table(Table $table): Table
     {
         return PintuKeluarsTable::configure($table);
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->with('pintuMasuk');
     }
 
     public static function getRelations(): array

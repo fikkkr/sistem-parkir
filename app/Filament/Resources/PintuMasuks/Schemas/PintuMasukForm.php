@@ -2,9 +2,11 @@
 
 namespace App\Filament\Resources\PintuMasuks\Schemas;
 
-use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\TextInput;
+use App\Models\MasterTarif;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Str;
 
@@ -18,7 +20,7 @@ class PintuMasukForm
                     ->default(fn () => auth()->id()),
 
                 TextInput::make('kode_karcis')
-                    ->default(fn () => 'KRC-' . strtoupper(Str::random(6)))
+                    ->default(fn () => 'PKR-'.now()->format('Ymd').'-'.strtoupper(Str::random(4)))
                     ->readOnly()
                     ->required(),
 
@@ -26,6 +28,17 @@ class PintuMasukForm
                     ->label('Plat Nomor')
                     ->required()
                     ->placeholder('Contoh: B 1234 ABC'),
+
+                Select::make('master_tarif_id')
+                    ->label('Jenis Kendaraan')
+                    ->options(fn () => MasterTarif::query()
+                        ->get()
+                        ->mapWithKeys(fn (MasterTarif $tarif) => [
+                            $tarif->id => $tarif->jenis_kendaraan,
+                        ]))
+                    ->searchable()
+                    ->preload()
+                    ->required(),
 
                 DateTimePicker::make('waktu_masuk')
                     ->label('Waktu Masuk')
