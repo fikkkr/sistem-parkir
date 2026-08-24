@@ -16,7 +16,13 @@
         </div>
         <div>
             <dt class="text-sm text-gray-500">Jam Masuk</dt>
-            <dd class="font-medium text-gray-950 dark:text-white">{{ $record->waktu_masuk?->format('d M Y, H:i:s') }}</dd>
+            <dd class="font-medium text-gray-950 dark:text-white">
+                @if ($record->waktu_masuk)
+                    {{ \Carbon\Carbon::parse($record->waktu_masuk)->format('d M Y, H:i:s') }}
+                @else
+                    <span class="text-gray-400">-</span>
+                @endif
+            </dd>
         </div>
     </dl>
 

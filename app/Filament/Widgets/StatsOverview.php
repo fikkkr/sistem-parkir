@@ -26,7 +26,7 @@ class StatsOverview extends StatsOverviewWidget
                 ->color('danger')
                 ->icon('heroicon-o-truck'),
             Stat::make('Total Master Tarif', MasterTarif::count())
-                ->description('Jumlah total Uang yang tercatat')
+                ->description('Jumlah Tarif parkir yang tercatat')
                 ->descriptionIcon('heroicon-o-information-circle')
                 ->color('primary')
                 ->icon('heroicon-o-currency-dollar'),

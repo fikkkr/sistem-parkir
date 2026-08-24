@@ -12,8 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('master_tarifs', function (Blueprint $table) {
-            //
-            $table->string('tipe_tarif')->default('per_jam')->after('jenis_kendaraan');
+            // Column already exists in create table migration, skip if present
+            if (! Schema::hasColumn('master_tarifs', 'tipe_tarif')) {
+                $table->string('tipe_tarif')->default('per_jam')->after('jenis_kendaraan');
+            }
         });
     }
 

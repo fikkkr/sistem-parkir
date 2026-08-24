@@ -7,7 +7,7 @@ use App\Filament\Resources\PintuKeluars\Pages\EditPintuKeluar;
 use App\Filament\Resources\PintuKeluars\Pages\ListPintuKeluars;
 use App\Filament\Resources\PintuKeluars\Schemas\PintuKeluarForm;
 use App\Filament\Resources\PintuKeluars\Tables\PintuKeluarsTable;
-use App\Models\PintuKeluar;
+use App\Models\PintuMasuk;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 class PintuKeluarResource extends Resource
 {
-    protected static ?string $model = PintuKeluar::class;
+    protected static ?string $model = PintuMasuk::class;
 
     protected static ?string $modelLabel = 'Pintu keluar';
 
@@ -39,7 +39,9 @@ class PintuKeluarResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->with('pintuMasuk');
+        return PintuMasuk::query()
+            ->where('status', 'MASUK')
+            ->with('masterTarif');
     }
 
     public static function getRelations(): array

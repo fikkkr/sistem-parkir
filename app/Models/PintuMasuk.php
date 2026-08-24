@@ -23,15 +23,12 @@ class PintuMasuk extends Model
         'total_bayar',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'waktu_masuk' => 'datetime',
-            'waktu_keluar' => 'datetime',
-            'durasi_jam' => 'integer',
-            'total_bayar' => 'decimal:2',
-        ];
-    }
+    protected $casts = [
+        'waktu_masuk' => 'datetime',
+        'waktu_keluar' => 'datetime',
+        'durasi_jam' => 'integer',
+        'total_bayar' => 'decimal:2',
+    ];
 
     protected static function booted(): void
     {

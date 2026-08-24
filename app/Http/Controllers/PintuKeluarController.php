@@ -62,4 +62,14 @@ class PintuKeluarController extends Controller
     {
         //
     }
+
+    /**
+     * Display the payment receipt for printing.
+     */
+    public function struk(PintuKeluar $pintuKeluar)
+    {
+        $keluar = $pintuKeluar->load(['pintuMasuk.masterTarif']);
+
+        return view('pintu-keluar.struk', ['keluar' => $keluar]);
+    }
 }
