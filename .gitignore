@@ -4,6 +4,8 @@
 .env.backup
 .env.production
 .phpactor.json
+E2E_TESTING_REPORT.md
+IMPLEMENTATION_CETAK_STRUK.md
 .phpunit.result.cache
 /.fleet
 /.idea
