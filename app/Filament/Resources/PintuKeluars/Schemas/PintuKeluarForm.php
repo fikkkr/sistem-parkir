@@ -28,7 +28,7 @@ class PintuKeluarForm
                     ->options(fn () => PintuMasuk::query()
                         ->where('status', 'MASUK')
                         ->pluck('kode_karcis', 'id'))
-                    ->getOptionLabelUsing(fn ($value): ?string => PintuMasuk::find($value)?->kode_karcis)
+                    ->getOptionLabelUsing(fn ($value): ?string => PintuMasuk::with('masterTarif')->find($value)?->kode_karcis)
                     ->searchable()
                     ->preload() // wajib ditambahkan agar opsi langsung muncul saat dropdown diklik
                     ->required()

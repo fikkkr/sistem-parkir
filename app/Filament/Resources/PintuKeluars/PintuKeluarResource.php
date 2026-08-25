@@ -39,9 +39,9 @@ class PintuKeluarResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return PintuMasuk::query()
-            ->where('status', 'MASUK')
-            ->with('masterTarif');
+        return parent::getEloquentQuery()
+            ->with('masterTarif')
+            ->where('status', 'MASUK');
     }
 
     public static function getRelations(): array
