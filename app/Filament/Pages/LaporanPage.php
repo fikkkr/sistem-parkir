@@ -6,18 +6,22 @@ use App\Models\PintuMasuk;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Contracts\HasForms;
-use Filament\Actions\Action;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Filament\Tables\Concerns\InteractsWithTable;
+use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\Summarizers\Count;
+use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Table;
 use Illuminate\Support\Carbon;
 
-class LaporanPage extends Page implements HasForms
+class LaporanPage extends Page implements HasForms, HasTable
 {
     use InteractsWithForms;
+    use InteractsWithTable;
 
     protected static ?string $navigationLabel = 'Laporan Pendapatan';
     protected string $view = 'filament.pages.laporan';
@@ -60,11 +64,9 @@ class LaporanPage extends Page implements HasForms
 
     public function generateLaporan(): void
     {
-        $validated = $this->validateOnly('data.tanggal_mulai');
-        $validated = $this->validateOnly('data.tanggal_selesai');
-        
-        $tanggal_mulai = Carbon::parse($this->data['tanggal_mulai'])->startOfDay();
-        $tanggal_selesai = Carbon::parse($this->data['tanggal_selesai'])->endOfDay();
+        $state = $this->form->getState();
+        $tanggal_mulai = Carbon::parse($state['tanggal_mulai'])->startOfDay();
+        $tanggal_selesai = Carbon::parse($state['tanggal_selesai'])->endOfDay();
 
         // Get completed transactions (SELESAI) within date range
         $this->transaksiData = PintuMasuk::with(['pintuKeluar.user'])
@@ -73,12 +75,14 @@ class LaporanPage extends Page implements HasForms
             ->orderBy('waktu_keluar', 'desc')
             ->get();
 
+        $this->resetTable();
+
         // Calculate summary data
         $this->summaryData = [
             'total_transaksi' => $this->transaksiData->count(),
             'total_pendapatan' => $this->transaksiData->sum('total_bayar'),
-            'tanggal_mulai' => $tanggal_mulai->format('d F Y'),
-            'tanggal_selesai' => $tanggal_selesai->format('d F Y'),
+            'tanggal_mulai' => $tanggal_mulai->format('d M Y'),
+            'tanggal_selesai' => $tanggal_selesai->format('d M Y'),
         ];
 
         Notification::make()
@@ -124,7 +128,8 @@ class LaporanPage extends Page implements HasForms
             ->columns([
                 TextColumn::make('kode_karcis')
                     ->label('Kode Karcis')
-                    ->searchable(),
+                    ->searchable()
+                    ->summarize(Count::make()->label('Total Transaksi')),
                 
                 TextColumn::make('plat_nomor')
                     ->label('Plat Nomor')
@@ -147,23 +152,15 @@ class LaporanPage extends Page implements HasForms
                 TextColumn::make('total_bayar')
                     ->label('Total Bayar')
                     ->money('IDR')
-                    ->sortable(),
+                    ->sortable()
+                    ->summarize(Sum::make()->label('Total Pendapatan')->money('IDR')),
                 
                 TextColumn::make('pintuKeluar.user.name')
                     ->label('Petugas')
                     ->searchable(),
             ])
             ->filters([])
-            ->actions([
-                Action::make('export_pdf')
-                    ->label('Export PDF')
-                    ->icon('heroicon-o-document-arrow-down')
-                    ->action('exportToPDF')
-                    ->color('green')
-                    ->requiresConfirmation()
-                    ->modalHeading('Export Laporan ke PDF')
-                    ->modalDescription('Apakah Anda yakin ingin mengexport laporan ini ke format PDF?')
-            ])
+            ->actions([])
             ->bulkActions([]);
     }
 }
