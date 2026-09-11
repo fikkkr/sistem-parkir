@@ -19,11 +19,11 @@ class PintuKeluarResource extends Resource
 {
     protected static ?string $model = PintuMasuk::class;
 
-    protected static ?string $modelLabel = 'Pintu keluar';
+    protected static ?string $modelLabel = 'bayar karcis';
 
-    protected static ?string $pluralModelLabel = 'Pintu keluar';
+    protected static ?string $pluralModelLabel = 'Bayar karcis';
 
-    protected static ?string $navigationLabel = 'Bayar';
+    protected static ?string $navigationLabel = 'Bayar karcis';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 

@@ -71,6 +71,9 @@ class LaporanPage extends Page implements HasForms, HasTable
         // Get completed transactions (SELESAI) within date range
         $this->transaksiData = PintuMasuk::with(['pintuKeluar.user'])
             ->where('status', 'SELESAI')
+            ->whereHas('pintuKeluar', function ($query): void {
+                $query->where('status_pembayaran', 'Lunas');
+            })
             ->whereBetween('waktu_keluar', [$tanggal_mulai, $tanggal_selesai])
             ->orderBy('waktu_keluar', 'desc')
             ->get();
@@ -119,6 +122,9 @@ class LaporanPage extends Page implements HasForms, HasTable
             ->query(
                 PintuMasuk::with(['pintuKeluar.user'])
                     ->where('status', 'SELESAI')
+                    ->whereHas('pintuKeluar', function ($query): void {
+                        $query->where('status_pembayaran', 'Lunas');
+                    })
                     ->whereBetween('waktu_keluar', [
                         Carbon::parse($this->data['tanggal_mulai'])->startOfDay(),
                         Carbon::parse($this->data['tanggal_selesai'])->endOfDay(),

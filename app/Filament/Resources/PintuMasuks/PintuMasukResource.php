@@ -18,8 +18,8 @@ use Illuminate\Database\Eloquent\Builder;
 class PintuMasukResource extends Resource
 {
     protected static ?string $model = PintuMasuk::class;
-    protected static ?string $modelLabel = 'Pintu masuk';
-    protected static ?string $pluralModelLabel = 'Pintu masuk';
+    protected static ?string $modelLabel = 'Buat karcis';
+    protected static ?string $pluralModelLabel = 'Buat karcis';
     protected static ?string $navigationLabel = 'Buat Karcis';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Laporan;
 use App\Models\PintuMasuk;
 use App\Models\PintuKeluar;
 use Illuminate\Http\Request;
@@ -33,6 +34,7 @@ class LaporanController extends Controller
         // Get completed transactions (SELESAI) within date range
         $transaksiSelesai = PintuMasuk::with(['pintuKeluar.user'])
             ->where('status', 'SELESAI')
+            ->whereHas('pintuKeluar')
             ->whereBetween('waktu_keluar', [$tanggal_mulai, $tanggal_selesai])
             ->orderBy('waktu_keluar', 'desc')
             ->get();
@@ -60,6 +62,7 @@ class LaporanController extends Controller
         // Get completed transactions (SELESAI) within date range
         $transaksiSelesai = PintuMasuk::with(['pintuKeluar.user'])
             ->where('status', 'SELESAI')
+            ->whereHas('pintuKeluar')
             ->whereBetween('waktu_keluar', [$tanggal_mulai, $tanggal_selesai])
             ->orderBy('waktu_keluar', 'desc')
             ->get();
